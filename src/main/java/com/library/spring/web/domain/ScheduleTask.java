@@ -16,6 +16,10 @@ public class ScheduleTask implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
+	@Column(name="jobname", nullable = false)
+	private String jobName;
+	@Column(name="jobgroup", nullable = false)
+	private String jobGroup;
 	@Column(name="collection", nullable = false)
 	private String collection;
 	@Column(name="service", nullable = false)
@@ -24,6 +28,22 @@ public class ScheduleTask implements Serializable{
 	private Integer refreshDuration;
 	@Column(name="executiondate")
 	private Date executionDate;
+
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+
+	public String getJobGroup() {
+		return jobGroup;
+	}
+
+	public void setJobGroup(String jobGroup) {
+		this.jobGroup = jobGroup;
+	}
 
 	public String getCollection() {
 		return collection;

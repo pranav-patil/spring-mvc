@@ -1,132 +1,83 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <title>Spring Thyme Seed Starter Manager</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" href="../../css/main.css" th:href="@{/css/main.css}"/>
+<head lang="en" th:replace="fragments/header :: header">
+    <title>Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content="Link Search allows to find the hyperlinks in the predefined bookmarks" />
+    <meta name="keywords" content="search, find, links, hyperlinks, bookmarks"/>
+    <link rel="shortcut icon" type="image/x-icon" href="../../images/emproviseicon.ico" />
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/main.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/bootstrap-table.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/bootstrap-editable.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/bootstrap-theme.min.css"/>
+    <!--<script src="../../js/jquery.min.js"></script>-->
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.js"></script>
+    <script src="../../js/jquery.tabledit.min.js"></script>
+    <script src="../../js/batchtable.load.js"></script>
 </head>
-
 <body>
-    <div>
-        <img src="../../images/emprovise.gif" alt="Emprovise" title="Emprovise" height="50" width="275"
-             th:src="@{/images/emprovise.gif}" th:alt-title="#{title.application}"/>
+    <div th:replace="fragments/banner :: banner">
+        <div class="header">
+            <img src="../../images/emprovise.gif" alt="emprovise" title="Emprovise" width="275" height="50"
+                 th:src="@{/images/emprovise.gif}" th:alt-title="#{title.application}" />
+        </div>
+        <hr class="divider" />
     </div>
 
-    <div class="seedstarterlist" th:unless="${#lists.isEmpty(allBatchTasks)}">
-
-        <h2 th:text="#{title.list}">List of Seed Starters</h2>
-
-        <table>
+    <div class="container">
+        <h2 th:text="#{title.list}">List of Batch Jobs</h2>
+        <div id="toolbar">
+            <a id="add_row" class="btn btn-default pull-left">Add Row</a>
+            <!--<a id="update" class="btn btn-default pull-left">Update</a>-->
+        </div>
+        <table id="batchtable"
+               data-toolbar="#toolbar"
+               data-toggle="table"
+               data-pagination="true"
+               data-search="true"
+               data-show-refresh="true"
+               data-show-toggle="true"
+               data-show-columns="false"
+               data-show-export="false"
+               data-show-footer="false"
+               data-url="/web/batch/jobs">
             <thead>
             <tr>
-                <th th:text="#{batchtask.collection}">Date Planted</th>
-                <th th:text="#{batchtask.service}">Covered</th>
-                <th th:text="#{batchtask.refreshduration}">Type</th>
-                <th th:text="#{batchtask.lastexecutiondate}">Features</th>
-                <th th:text="#{batchtask.rows}">Rows</th>
+                <th th:text="#{batchtask.id}" data-field="id">No</th>
+                <th th:text="#{batchtask.collection}" data-field="collection" data-sortable="true">Collection Name</th>
+                <th th:text="#{batchtask.service}" data-field="service" data-sortable="true">Service URL</th>
+                <th th:text="#{batchtask.refreshDuration}" data-field="refreshDuration" data-sortable="true">Refresh Duration in Minutes</th>
+                <th th:text="#{batchtask.lastExecutionDate}" data-field="lastExecutionDate" data-sortable="true">Last Execution Date</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="task : ${allBatchTasks}">
-                <td th:text="${task.collectionName}">Collection Name</td>
-                <td th:text="${task.service}">Service URL</td>
-                <td th:text="${task.refreshDuration}">Refresh Duration in Minutes</td>
+            <!--
+            <tr th:each="task,iterationStatus : ${allBatchTasks}">
+                <td th:text="${iterationStatus.count}">1</td>
+                <td th:text="${task.collection}">features</td>
+                <td th:text="${task.service}">http://www.google.com</td>
+                <td th:text="${task.refreshDuration}">30</td>
                 <td th:text="${{task.lastExecutionDate}}">13/01/2011</td>
-<!--                <td th:text="#{|bool.${sb.covered}|}">yes</td>
-                <td th:text="#{|seedstarter.type.${sb.type}|}">Wireframe</td> -->
-            </tr>
+            </tr> -->
             </tbody>
         </table>
-
     </div>
 
-<!--
-    <div>
-
-        <h2 th:text="#{title.new}">Add new Seed Starter</h2>
-
-        <form action="#" th:action="@{/seedstartermng}" th:object="${seedStarter}" method="post">
-
-            <fieldset>
-
-                <legend th:text="#{seedstarter.data}">Seed Starter Data</legend>
-
-                <ul th:if="${#fields.hasErrors('*')}" class="errorlist">
-                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-                </ul>
-
-
-                <div>
-                    <label for="datePlanted">
-                        <span th:text="#{seedstarter.datePlanted}">Date planted</span>
-                        (<span th:text="#{date.format}">YYYY/MM/DD</span>)
-                    </label>
-                    <input type="text" th:field="*{datePlanted}" th:errorclass="fieldError" />
-                </div>
-                <div>
-                    <label th:for="${#ids.next('covered')}" th:text="#{seedstarter.covered}">Covered</label>
-                    <input type="checkbox" th:field="*{covered}" />
-                </div>
-                <div>
-                    <label for="type" th:text="#{seedstarter.type}">Type</label>
-                    <select th:field="*{type}">
-                        <option th:each="type : ${allTypes}" th:value="${type}" th:text="#{${'seedstarter.type.' + type}}">Wireframe</option>
-                    </select>
-                </div>
-                <div>
-                    <label th:text="#{seedstarter.features}">Features</label>
-                    <ul>
-                        <li th:each="feat : ${allFeatures}">
-                            <input type="checkbox" th:field="*{features}" th:value="${feat}" />
-                            <label th:for="${#ids.prev('features')}" th:text="#{${'seedstarter.feature.' + feat}}">Electric Heating</label>
-                        </li>
-                        <li th:remove="all">
-                            <input id="removed1" type="checkbox" /> <label for="removed1">Turf</label>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <label th:text="#{seedstarter.rows}">Rows</label>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th th:text="#{seedstarter.rows.head.rownum}">Row</th>
-                            <th th:text="#{seedstarter.rows.head.variety}">Variety</th>
-                            <th th:text="#{seedstarter.rows.head.seedsPerCell}">Seeds per cell</th>
-                            <th>
-                                <button type="submit" name="addRow" th:text="#{seedstarter.row.add}">Add row</button>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="row,rowStat : *{rows}">
-                            <td th:text="${rowStat.count}">1</td>
-                            <td>
-                                <select th:field="*{rows[__${rowStat.index}__].variety}">
-                                    <option th:each="var : ${allVarieties}" th:value="${var.id}" th:text="${var.name}">Thymus Thymi</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" th:field="*{rows[__${rowStat.index}__].seedsPerCell}" th:errorclass="fieldError" />
-                            </td>
-                            <td>
-                                <button type="submit" name="removeRow" th:value="${rowStat.index}" th:text="#{seedstarter.row.remove}">Remove row</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="submit">
-                    <button type="submit" name="save" th:text="#{seedstarter.create}">Add Seed Starter</button>
-                </div>
-
-            </fieldset>
-        </form>
+    <br/><br/><br/>
+    <div class="alert alert-success" id="eventsResult">
+        Here is the result of event.
     </div>
-    -->
+
+    <div th:replace="fragments/footer :: footer">
+        <div class="footer">
+            <div style="float: left; width: 500;">
+                <p>Copyright  2018. Designed and Developed by <a href="http://www.emprovisetech.blogspot.com" title="Emprovise">Emprovise Inc</a></p>
+                <p><a href="/policy.html">Privacy Policy</a> | <a href="/terms.html">Terms of Use</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

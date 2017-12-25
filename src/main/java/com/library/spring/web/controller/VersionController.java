@@ -3,10 +3,8 @@ package com.library.spring.web.controller;
 
 import com.library.spring.web.model.VersionBean;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +13,11 @@ import java.io.InputStream;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-@Controller
+@RestController
 public class VersionController {
 
-	@RequestMapping(value = "/version", method = RequestMethod.GET)
+	@GetMapping("/version")
 	@ApiOperation(value = "Get Version", notes = "Retrieves the current version details of spring mvc application.", response = VersionBean.class)
-	@ResponseBody
 	public VersionBean getVersion(HttpServletRequest request) throws IOException {
 		return getVersion(request.getServletContext());
 	}

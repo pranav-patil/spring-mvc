@@ -7,14 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Controller
+@RestController
 @RequestMapping("/weather")
 public class WeatherController {
 
@@ -26,9 +23,8 @@ public class WeatherController {
 
     private static final String BASE_PATH = "/data/2.5";
 
-    @RequestMapping(value = "/country/{country}/city/{city}", method = RequestMethod.GET)
+    @GetMapping("/country/{country}/city/{city}")
     @ApiOperation(value = "Get City Weather", notes = "Retrieve weather for city by name.", response = String.class)
-    @ResponseBody
     public String getWeather(@ApiParam(required = true, name = "city", value = "Name of the City") @PathVariable String city,
                              @ApiParam(required = true, name = "country", value = "Name of Country of the city") @PathVariable String country) throws Exception {
         HttpClient client = new HttpClient();
@@ -38,9 +34,8 @@ public class WeatherController {
         return client.get(uri);
     }
 
-    @RequestMapping(value = "/forecast/country/{country}/city/{city}", method = RequestMethod.GET)
+    @GetMapping("/forecast/country/{country}/city/{city}")
     @ApiOperation(value = "Get Weather Forecast", notes = "Retrieve 5 day or 3 hour forecast for city by name.", response = String.class)
-    @ResponseBody
     public String getForecast(@ApiParam(required = true, name = "city", value = "Name of the City") @PathVariable String city,
                               @ApiParam(required = true, name = "country", value = "Name of Country of the city") @PathVariable String country) throws Exception {
 

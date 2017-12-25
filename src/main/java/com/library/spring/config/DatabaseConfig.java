@@ -17,6 +17,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+/**
+ * @see <a href="https://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html/ch03.html">Hibernate Configuration</a>
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories("com.library.spring.web.repository")
@@ -47,10 +50,13 @@ public class DatabaseConfig {
         return entityManagerFactoryBean;
     }
 
-    Properties additionalProperties() {
+    private Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "create-only");
-        //properties.setProperty("javax.persistence.sql-load-script-source", "embeddeddb/insert-data.sql");
+        properties.setProperty("hibernate.hbm2ddl.import_files_sql_extractor", "org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor");
+        properties.setProperty("javax.persistence.schema-generation.create-source", "metadata-then-script");
+        properties.setProperty("javax.persistence.schema-generation.create-script-source", "embeddeddb/quartz_tables.sql");
+//        properties.setProperty("javax.persistence.sql-load-script-source", "embeddeddb/insert-data.sql");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
         return properties;
     }

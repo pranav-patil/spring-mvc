@@ -10,10 +10,9 @@ import java.util.List;
 
 @Mapper(
         withCustomFields = {
-            @Field({"collection", "collectionName"}),
             @Field({"executiondate", "lastExecutionDate"})
         },
-        withIgnoreFields = "id",
+        withIgnoreFields = {"id", "jobName", "jobGroup", "action"},
         withIoC = IoC.SPRING
 )
 public interface ScheduleTaskMapper {

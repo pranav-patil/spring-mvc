@@ -4,17 +4,27 @@ import java.util.Date;
 
 public class BatchTask {
 
-    private String collectionName;
+    private String id;
+    private String collection;
     private String service;
     private Integer refreshDuration;
     private Date lastExecutionDate;
+    private String action;
 
-    public String getCollectionName() {
-        return collectionName;
+    public String getId() {
+        return id;
     }
 
-    public void setCollectionName(String collectionName) {
-        this.collectionName = collectionName;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
     }
 
     public String getService() {
@@ -39,6 +49,14 @@ public class BatchTask {
 
     public void setLastExecutionDate(Date lastExecutionDate) {
         this.lastExecutionDate = lastExecutionDate;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 
     @Override

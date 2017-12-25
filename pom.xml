@@ -19,7 +19,6 @@
 		<logback.version>1.1.7</logback.version>
 		<jcl.slf4j.version>1.7.12</jcl.slf4j.version>
 		<dbh2.version>1.4.187</dbh2.version>
-		<mapstruct.version>1.2.0.Final</mapstruct.version>
 		<hibernate.version>5.2.12.Final</hibernate.version>
 	</properties>
 
@@ -32,7 +31,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Spring 3 dependencies -->
+		<!-- Spring 5 dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -59,6 +58,13 @@
 			<artifactId>spring-aop</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<!-- Spring Context-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- Spring JPA -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
@@ -103,6 +109,8 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
 		</dependency>
+
+		<!-- Swagger Docs using SpringFox -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -113,6 +121,8 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.7.0</version>
 		</dependency>
+
+		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -129,10 +139,11 @@
 			<version>${logback.version}</version>
 		</dependency>
 
+		<!-- Quartz Scheduler -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 
 		<!-- H2 DB -->
@@ -142,17 +153,14 @@
 			<version>${dbh2.version}</version>
 		</dependency>
 
+		<!-- Thymeleaf View Templates -->
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf-spring5</artifactId>
 			<version>3.0.9.RELEASE</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-jdk8</artifactId>
-			<version>${mapstruct.version}</version>
-		</dependency>
+		<!-- Object Mapping Framework -->
 		<dependency>
 			<groupId>fr.xebia.extras</groupId>
 			<artifactId>selma-processor</artifactId>
@@ -207,13 +215,6 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${mapstruct.version}</version>
-						</path>
-					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>

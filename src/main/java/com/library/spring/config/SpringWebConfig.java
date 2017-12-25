@@ -21,7 +21,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 @EnableWebMvc
 @Configuration
-@Import({SwaggerConfig.class, DatabaseConfig.class})
+@Import({SwaggerConfig.class, DatabaseConfig.class, SchedulerConfig.class})
 @PropertySource("classpath:config/application.properties")
 @ComponentScan({ "com.library.spring.web" })
 public class SpringWebConfig implements WebMvcConfigurer {
@@ -37,6 +37,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/images/**").addResourceLocations("/images/");
 		registry.addResourceHandler("/css/**").addResourceLocations("/css/");
 		registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+		registry.addResourceHandler("/fonts/**").addResourceLocations("/fonts/");
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
