@@ -1,5 +1,8 @@
 package com.library.spring.scheduler.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MongoSyncJobData implements JobData {
 
     private String collection;

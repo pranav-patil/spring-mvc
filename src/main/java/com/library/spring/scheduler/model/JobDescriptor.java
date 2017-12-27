@@ -113,7 +113,17 @@ public class JobDescriptor {
 
         if(!jobDataMap.isEmpty() && jobDataMap.containsKey("jobDataClass")) {
             ObjectMapper mapper = new ObjectMapper();
-            Class<? extends JobData> jobDataClass = (Class<? extends JobData>) jobDataMap.get("jobDataClass");
+            Object jobDataClassObject = jobDataMap.get("jobDataClass");
+
+            if(! (jobDataClassObject instanceof Class)) {
+                try {
+                    jobDataClassObject = Class.forName(jobDataClassObject.toString());
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            Class<? extends JobData> jobDataClass = (Class<? extends JobData>) jobDataClassObject;
             JobData jobData = mapper.convertValue(jobDataMap, jobDataClass);
             jobDescriptor.setJobData(jobData);
         }

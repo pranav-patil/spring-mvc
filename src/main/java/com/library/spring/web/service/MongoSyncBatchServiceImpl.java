@@ -40,11 +40,13 @@ public class MongoSyncBatchServiceImpl implements MongoSyncBatchService {
 				batchTask.setService(jobData.getService());
 
 				List<? extends Trigger> triggers = jobService.getTriggers(MONGO_SYNC_JOB_GROUP, job.getName());
-				batchTask.setLastExecutionDate(TriggerDescriptor.getLastExecutionDate(triggers));
+				Date lastExecutionDate = TriggerDescriptor.getLastExecutionDate(triggers);
+				batchTask.setLastExecutionDate(lastExecutionDate);
 
 				Date futureExecutionDate = TriggerDescriptor.getFutureExecutionDate(triggers);
+				LocalDateTime lastExecutionDateTime = LocalDateTime.ofInstant(lastExecutionDate.toInstant(), ZoneId.systemDefault());
 				LocalDateTime futureExecutionDateTime = LocalDateTime.ofInstant(futureExecutionDate.toInstant(), ZoneId.systemDefault());
-				long minutes = Duration.between(futureExecutionDateTime, LocalDateTime.now()).toMinutes();
+				long minutes = Duration.between(futureExecutionDateTime, lastExecutionDateTime).toMinutes();
 				batchTask.setRefreshDuration((int) minutes);
 
 				batchTasks.add(batchTask);

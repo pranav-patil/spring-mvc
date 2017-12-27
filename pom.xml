@@ -18,7 +18,7 @@
 		<jackson.version>2.9.2</jackson.version>
 		<logback.version>1.1.7</logback.version>
 		<jcl.slf4j.version>1.7.12</jcl.slf4j.version>
-		<dbh2.version>1.4.187</dbh2.version>
+		<dbh2.version>1.4.196</dbh2.version>
 		<hibernate.version>5.2.12.Final</hibernate.version>
 	</properties>
 
@@ -137,6 +137,12 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.18</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Quartz Scheduler -->

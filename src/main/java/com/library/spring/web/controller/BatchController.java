@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/batch")
@@ -34,7 +35,14 @@ public class BatchController {
             mongoSyncBatchService.updateMongoSyncJob(batchTask);
         } else if("delete".equals(batchTask.getAction())) {
             mongoSyncBatchService.deleteMongoSyncJob(batchTask);
-        } else if("restore".equals(batchTask.getAction())) {
+        } else if("create".equals(batchTask.getAction())) {
+
+            if(batchTask.getId() == null) {
+                Random random = new Random();
+                int randomNumber = random.ints(0, Integer.MAX_VALUE - 1).findFirst().getAsInt();
+                batchTask.setId("job" + randomNumber);
+            }
+
             mongoSyncBatchService.addMongoSyncJob(batchTask);
         }
 

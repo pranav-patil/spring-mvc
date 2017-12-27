@@ -1,5 +1,7 @@
 package com.library.spring.web.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class BatchTask {
@@ -8,6 +10,7 @@ public class BatchTask {
     private String collection;
     private String service;
     private Integer refreshDuration;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date lastExecutionDate;
     private String action;
 

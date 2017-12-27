@@ -103,7 +103,7 @@ public class TriggerDescriptor {
         if(Objects.nonNull(triggers)) {
             for (Trigger trigger : triggers) {
                 Date nextFireTime = trigger.getNextFireTime();
-                if (nextFireTime.compareTo(executionDate) < 0) {
+                if (nextFireTime != null && nextFireTime.compareTo(executionDate) < 0) {
                     executionDate = nextFireTime;
                 }
             }
@@ -116,7 +116,7 @@ public class TriggerDescriptor {
         if(Objects.nonNull(triggers)) {
             for (Trigger trigger : triggers) {
                 Date previousFireTime = trigger.getPreviousFireTime();
-                if (previousFireTime.compareTo(executionDate) > 0) {
+                if (previousFireTime != null && previousFireTime.compareTo(executionDate) > 0) {
                     executionDate = previousFireTime;
                 }
             }
