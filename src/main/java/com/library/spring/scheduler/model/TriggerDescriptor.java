@@ -112,9 +112,14 @@ public class TriggerDescriptor {
     }
 
     public static Date getLastExecutionDate(List<? extends Trigger> triggers) {
-        Date executionDate = new Date(0);
+        Date executionDate = null;
         if(Objects.nonNull(triggers)) {
             for (Trigger trigger : triggers) {
+
+                if(executionDate == null) {
+                    executionDate = trigger.getStartTime();
+                }
+
                 Date previousFireTime = trigger.getPreviousFireTime();
                 if (previousFireTime != null && previousFireTime.compareTo(executionDate) > 0) {
                     executionDate = previousFireTime;

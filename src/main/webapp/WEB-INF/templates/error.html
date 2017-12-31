@@ -2,7 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 
-<head lang="en" th:replace="fragments/header :: header"></head>
+<head th:replace="fragments/header :: header(~{::title},~{},~{},~{})">
+	<title>Error page</title>
+</head>
 
 <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
 	<div th:replace="fragments/banner :: banner"></div>

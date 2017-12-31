@@ -46,7 +46,7 @@ public class MongoSyncBatchServiceImpl implements MongoSyncBatchService {
 				Date futureExecutionDate = TriggerDescriptor.getFutureExecutionDate(triggers);
 				LocalDateTime lastExecutionDateTime = LocalDateTime.ofInstant(lastExecutionDate.toInstant(), ZoneId.systemDefault());
 				LocalDateTime futureExecutionDateTime = LocalDateTime.ofInstant(futureExecutionDate.toInstant(), ZoneId.systemDefault());
-				long minutes = Duration.between(futureExecutionDateTime, lastExecutionDateTime).toMinutes();
+				long minutes = Duration.between(lastExecutionDateTime,futureExecutionDateTime).toMinutes();
 				batchTask.setRefreshDuration((int) minutes);
 
 				batchTasks.add(batchTask);
@@ -85,7 +85,16 @@ public class MongoSyncBatchServiceImpl implements MongoSyncBatchService {
 		TriggerDescriptor triggerDescriptor = new TriggerDescriptor();
 		triggerDescriptor.setName(String.format("%s_TGR", batchTask.getId()));
 		triggerDescriptor.setGroup(MONGO_SYNC_JOB_GROUP);
-		triggerDescriptor.setCron(String.format("0 */%s * ? * *", batchTask.getRefreshDuration()));
+
+		Integer refreshDuration = batchTask.getRefreshDuration();
+		if(refreshDuration < 60) {
+			triggerDescriptor.setCron(String.format("* */%d * ? * *", refreshDuration));
+		}else if(refreshDuration < 1440) {
+			triggerDescriptor.setCron(String.format("* 0/%d 0/%d ? * * *", (refreshDuration / 60), (refreshDuration % 60)));
+		} else {
+			throw new RuntimeException(String.format("Refresh Duration %s minutes exceeds 24 hours which is currently not supported.", refreshDuration));
+		}
+
 		triggerDescriptors.add(triggerDescriptor);
 		jobDescriptor.setTriggerDescriptors(triggerDescriptors);
 		return jobDescriptor;

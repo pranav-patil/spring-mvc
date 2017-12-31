@@ -8,6 +8,14 @@ public class ResponseBean implements Serializable {
     private String message;
     private String responseCode;
 
+    public ResponseBean() {
+    }
+
+    public ResponseBean(String message, String responseCode) {
+        this.message = message;
+        this.responseCode = responseCode;
+    }
+
     public String getId() {
         return id;
     }

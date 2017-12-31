@@ -1,17 +1,17 @@
-<head th:fragment="header">
-    <title>Batch Jobs</title>
+<head th:fragment="header(title,meta,links,scripts)">
+    <title th:replace="${title}">Spring Application</title>
+
+    <!-- Common styles and scripts -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="Displays list of jobs currently scheduled and allows to add/edit/delete batch jobs if authorized" />
-    <meta name="keywords" content="batch, jobs, schedule, duration"/>
+    <th:block th:replace="${meta}" />
     <link rel="shortcut icon" type="image/x-icon" href="../../images/emproviseicon.ico" th:href="@{/images/emproviseicon.ico}" />
     <link rel="stylesheet" type="text/css" media="all" href="../../css/main.css" th:href="@{/css/main.css}"/>
     <link rel="stylesheet" type="text/css" media="all" href="../../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" type="text/css" media="all" href="../../css/bootstrap-table.css" th:href="@{/css/bootstrap-table.css}"/>
-    <link rel="stylesheet" type="text/css" media="all" href="../../css/bootstrap-editable.css" th:href="@{/css/bootstrap-editable.css}"/>
     <link rel="stylesheet" type="text/css" media="all" href="../../css/bootstrap-theme.min.css" th:href="@{/css/bootstrap-theme.min.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}"/>
+    <th:block th:replace="${links}" />
     <script src="../../js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
     <script src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-    <script src="../../js/bootstrap-table.js" th:src="@{/js/bootstrap-table.js}"></script>
-    <script src="../../js/jquery.tabledit.min.js" th:src="@{/js/jquery.tabledit.min.js}"></script>
-    <script src="../../js/batchtable.load.js" th:src="@{/js/batchtable.load.js}"></script>
+    <th:block th:replace="${scripts}" />
+
 </head>
