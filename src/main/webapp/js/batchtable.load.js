@@ -39,7 +39,7 @@
 
 	    var tableEditRefresh = function() {
 	        $('#batchtable').Tabledit({
-	            url: '/web/batch/job/operation',
+	            url: '/web/api/batch/job/operation',
 	            hideIdentifier: true,
 	            restoreButton: false,
 	            columns: {
@@ -75,7 +75,7 @@
 
 	        $.ajax({
 	            type: "POST",
-	            url: "/web/batch/job/operation",
+	            url: "/web/api/batch/job/operation",
 	            contentType: 'application/x-www-form-urlencoded',
 	            dataType: "json",
 	            data: $('#createBatchJobForm').serialize(),

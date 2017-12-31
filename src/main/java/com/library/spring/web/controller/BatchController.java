@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/batch")
+@RequestMapping("/api/batch")
 public class BatchController {
 
     @Autowired
