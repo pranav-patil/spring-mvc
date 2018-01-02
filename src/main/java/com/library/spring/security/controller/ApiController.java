@@ -1,8 +1,13 @@
 package com.library.spring.security.controller;
 
 
+import com.library.spring.security.model.UserBean;
 import com.library.spring.web.domain.Account;
+import com.library.spring.web.mapper.UserAccountMapper;
 import com.library.spring.web.service.AccountService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,23 +36,34 @@ public class ApiController {
     private TokenStore tokenStore;
     @Resource(name="tokenServices")
     private ConsumerTokenServices tokenServices;
+    @Autowired
+    private UserAccountMapper userAccountMapper;
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping(path = "/info", produces = "application/json" )
-    public Account userInfo() {
+    @ApiOperation(value = "Get Current User Info", notes = "Retrieves the current logged in user's account information.", response = UserBean.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})
+    public UserBean userInfo() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return accountService.findAccountByUsername(username);
+        Account account = accountService.findAccountByUsername(username);
+        return userAccountMapper.mapToUserBean(account);
     }
 
     @PreAuthorize("hasAuthority('ROLE_REGISTER')")
     @PostMapping(path = "/register", produces = "application/json")
-    public ResponseEntity<?> registerUser(@RequestBody Account account) throws AccountException {
+    @ApiOperation(value = "Register New User", notes = "Register a new user with USER role.", response = UserBean.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Basic username:password", required = true, dataType = "string", paramType = "header")})
+    public ResponseEntity<UserBean> registerUser(@RequestBody UserBean userBean) throws AccountException {
+        Account account = userAccountMapper.mapToAccount(userBean);
         account.grantAuthority("ROLE_USER");
-        return new ResponseEntity<Object>(accountService.register(account), HttpStatus.OK);
+        account = accountService.register(account);
+        return new ResponseEntity<>(userAccountMapper.mapToUserBean(account), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping(path = "/remove", produces = "application/json")
+    @ApiOperation(value = "Remove User", notes = "Removes or deletes a registered user.", response = String.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})
     public ResponseEntity<?> removeUser() {
         accountService.removeAuthenticatedAccount();
         return new ResponseEntity<>("User removed.", HttpStatus.OK);
@@ -59,7 +75,10 @@ public class ApiController {
      * @return
      */
     @GetMapping(path = "/tokens/{clientId}")
-    public List<String> getTokens(@ApiParam(required = true, name = "clientId", value = "Client Id by which to find tokens") @PathVariable String clientId) {
+    @ApiOperation(value = "Get Tokens", notes = "Retrieves all the tokens for specified client id.", response = String.class, responseContainer = "List")
+    @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})
+    public List<String> getTokens(@ApiParam(required = true, name = "clientId", value = "Client Id by which to find tokens")
+                                  @PathVariable String clientId) {
         List<String> tokenValues = new ArrayList<String>();
         Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId(clientId);
         if (tokens!=null){
@@ -74,7 +93,10 @@ public class ApiController {
      * @see <a href="http://www.baeldung.com/spring-security-oauth-revoke-tokens">Spring Security OAuth2 – Simple Token Revocation</a>
      */
     @PostMapping(path = "/tokens/revoke/{tokenId:.*}")
-    public String revokeToken(@PathVariable String tokenId) {
+    @ApiOperation(value = "Revoke Token", notes = "Revokes a token by token id.", response = String.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})
+    public String revokeToken(@ApiParam(required = true, name = "tokenId", value = "Token ID to be revoked")
+                              @PathVariable String tokenId) {
         tokenServices.revokeToken(tokenId);
         return tokenId;
     }

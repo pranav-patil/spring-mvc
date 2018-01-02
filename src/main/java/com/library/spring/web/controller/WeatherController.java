@@ -1,6 +1,8 @@
 package com.library.spring.web.controller;
 
 import com.library.spring.util.HttpClient;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,7 @@ public class WeatherController {
 
     @GetMapping("/country/{country}/city/{city}")
     @ApiOperation(value = "Get City Weather", notes = "Retrieve weather for city by name.", response = String.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})
     public String getWeather(@ApiParam(required = true, name = "city", value = "Name of the City") @PathVariable String city,
                              @ApiParam(required = true, name = "country", value = "Name of Country of the city") @PathVariable String country) throws Exception {
         HttpClient client = new HttpClient();
@@ -38,6 +41,7 @@ public class WeatherController {
 
     @GetMapping("/forecast/country/{country}/city/{city}")
     @ApiOperation(value = "Get Weather Forecast", notes = "Retrieve 5 day or 3 hour forecast for city by name.", response = String.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})
     public String getForecast(@ApiParam(required = true, name = "city", value = "Name of the City") @PathVariable String city,
                               @ApiParam(required = true, name = "country", value = "Name of Country of the city") @PathVariable String country) throws Exception {
 
