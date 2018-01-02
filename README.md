@@ -13,6 +13,7 @@ In this showcase you'll see the following in action:
 * [Swagger](https://swagger.io/) documentation using [Spring Fox](http://springfox.github.io/springfox/docs/snapshot)
 * [Quartz Job Scheduler](http://www.quartz-scheduler.org/) with database
 * [Lombok](https://projectlombok.org/), log definitions with annotations
+* Spring Security with [OAuth2](http://projects.spring.io/spring-security-oauth/docs/oauth2.html)
 
 To run the application:
 -------------------

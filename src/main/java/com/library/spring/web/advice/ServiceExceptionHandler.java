@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.security.auth.login.AccountException;
 import java.nio.file.AccessDeniedException;
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ public class ServiceExceptionHandler {
 
         if (exception instanceof AccessDeniedException) {
             httpStatus = HttpStatus.FORBIDDEN;
+        } else if(exception instanceof AccountException) {
+            httpStatus = HttpStatus.BAD_REQUEST;
         }
 
         HttpHeaders headers = new HttpHeaders();
