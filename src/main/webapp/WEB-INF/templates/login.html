@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/header :: header(~{::title},~{},~{},~{::script})">
+    <title>Login page</title>
+    <script src="../../js/login.js" th:src="@{/js/login.js}"></script>
+  </head>
+  <body>
+    <div th:replace="fragments/banner :: banner"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-offset-5 col-md-3">
+          <div id="login-form" class="form-login">
+            <h3>Login.</h3>
+            <p th:if="${loginError}" class="error">Wrong user or password</p>
+            <form id="loginForm" role="form" method="post">
+                <input type="text" id="username" name="username" class="form-control input-sm chat-input" placeholder="username" autofocus="autofocus" />
+                </br>
+                <input type="password" id="password" class="form-control input-sm chat-input" placeholder="password" />
+                </br>
+                <div class="wrapper">
+                <span class="group-btn">
+                    <input type="submit" value="Log in" class="btn btn-primary btn-md" />
+                    <!--<a href="#" >login <i class="fa fa-sign-in"></i></a>-->
+                </span>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/><br/><br/>
+	<div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>

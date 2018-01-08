@@ -22,6 +22,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Value("${security.oauth2.resource.id}")
 	private String resourceId;
+	@Value("${security.oauth2.client.client-secret}")
+	private String clientSecret;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -64,14 +66,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.resourceIds(resourceId)
 				.accessTokenValiditySeconds(3600)
 				.refreshTokenValiditySeconds(10000)
-				.secret("secret")
+				.secret(clientSecret)
 				.and()
 				.withClient("register-app")
 				.authorizedGrantTypes("client_credentials")
 				.authorities("ROLE_REGISTER")
 				.scopes("read")
 				.resourceIds(resourceId)
-				.secret("secret");
+				.secret(clientSecret);
 	}
 
 	@Bean

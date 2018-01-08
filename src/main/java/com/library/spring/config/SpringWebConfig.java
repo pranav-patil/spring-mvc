@@ -51,7 +51,8 @@ public class SpringWebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry){
-		//registry.addViewController("/batchschedule").setViewName("batchschedule");
+		registry.addViewController("/secure/view/batchschedule").setViewName("batchschedule");
+		registry.addViewController("/public/view/login").setViewName("login");
 	}
 
 	@Bean
