@@ -20,9 +20,9 @@
                 async: true,
 	            dataType: "json",
 	            success: function(json, textStatus, jqXHR) {
-                    Lockr.set('access_token', json.access_token);
-                    Lockr.set('refresh_token', json.refresh_token);
-                    window.location.href = "/web/secure/view/batchschedule?access_token=" + json.access_token;
+	                Cookies.set('access_token', json.access_token, { expires: 7 });
+	                Cookies.set('refresh_token', json.refresh_token, { expires: 7 });
+                    window.location.href = "/web/secure/view/batchschedule";
 	            },
 	            error: function(jqXHR, textStatus, errorThrown) {
 	                var responseText = jQuery.parseJSON(jqXHR.responseText);

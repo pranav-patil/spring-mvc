@@ -14,7 +14,7 @@
 
         var $batchtable = $('#batchtable');
         table_options = $batchtable.bootstrapTable('getOptions');
-        table_options.url = '/web/api/batch/jobs?access_token=' + Lockr.get('access_token');
+        table_options.url = '/web/api/batch/jobs?access_token=' + Cookies.get('access_token');
         $batchtable.bootstrapTable('refreshOptions',table_options);
         $batchtable.bootstrapTable('refresh');
 
@@ -45,7 +45,7 @@
 
 	    var tableEditRefresh = function() {
 	        $('#batchtable').Tabledit({
-	            url: '/web/api/batch/job/operation?access_token=' + Lockr.get('access_token'),
+	            url: '/web/api/batch/job/operation?access_token=' + Cookies.get('access_token'),
 	            hideIdentifier: true,
 	            restoreButton: false,
 	            columns: {
@@ -83,7 +83,7 @@
 	            type: "POST",
 	            url: "/web/api/batch/job/operation",
 	            beforeSend: function (xhr) {
-                    xhr.setRequestHeader ("Authorization", "Bearer " + Lockr.get('access_token'));
+                    xhr.setRequestHeader ("Authorization", "Bearer " + Cookies.get('access_token'));
                 },
 	            contentType: 'application/x-www-form-urlencoded',
 	            dataType: "json",
