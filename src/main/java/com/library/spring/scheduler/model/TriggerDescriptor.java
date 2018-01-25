@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import static java.time.ZoneId.systemDefault;
 import static java.util.UUID.randomUUID;
@@ -23,6 +24,22 @@ public class TriggerDescriptor {
     private String group;
     private LocalDateTime fireTime;
     private String cron;
+    private Integer minuteInterval;
+
+    public TriggerDescriptor() {
+    }
+
+    /**
+     * @param trigger
+     *            the Trigger used to build this descriptor
+     */
+    public TriggerDescriptor(Trigger trigger) {
+        this.name = trigger.getKey().getName();
+        this.group = trigger.getKey().getGroup();
+        this.cron = trigger.getJobDataMap().getString("cron");
+        this.minuteInterval = getInteger(trigger.getJobDataMap().get("minuteInterval"));
+        this.fireTime = (LocalDateTime) trigger.getJobDataMap().get("fireTime");
+    }
 
     public TriggerDescriptor setName(final String name) {
         this.name = name;
@@ -41,6 +58,11 @@ public class TriggerDescriptor {
 
     public TriggerDescriptor setCron(final String cron) {
         this.cron = cron;
+        return this;
+    }
+
+    public TriggerDescriptor setMinuteInterval(final Integer minuteInterval) {
+        this.minuteInterval = minuteInterval;
         return this;
     }
 
@@ -69,6 +91,15 @@ public class TriggerDescriptor {
                     .usingJobData("cron", cron)
                     .build();
 
+        } else if (!isEmpty(minuteInterval)) {
+            JobDataMap jobDataMap = new JobDataMap();
+            jobDataMap.put("minuteInterval", minuteInterval);
+            return newTrigger()
+                    .withIdentity(buildName(), group)
+                    .withSchedule(simpleSchedule()
+                            .withIntervalInMinutes(minuteInterval).repeatForever())
+                    .usingJobData(jobDataMap)
+                    .build();
         } else if (!isEmpty(fireTime)) {
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap.put("fireTime", fireTime);
@@ -83,34 +114,7 @@ public class TriggerDescriptor {
 
         throw new IllegalStateException("unsupported trigger descriptor " + this);
     }
-
-    /**
-     *
-     * @param trigger
-     *            the Trigger used to build this descriptor
-     * @return the TriggerDescriptor
-     */
-    public static TriggerDescriptor buildDescriptor(Trigger trigger) {
-        return new TriggerDescriptor()
-                .setName(trigger.getKey().getName())
-                .setGroup(trigger.getKey().getGroup())
-                .setFireTime((LocalDateTime) trigger.getJobDataMap().get("fireTime"))
-                .setCron(trigger.getJobDataMap().getString("cron"));
-    }
-
-    public static Date getFutureExecutionDate(List<? extends Trigger> triggers) {
-        Date executionDate = new Date(Long.MAX_VALUE);
-        if(Objects.nonNull(triggers)) {
-            for (Trigger trigger : triggers) {
-                Date nextFireTime = trigger.getNextFireTime();
-                if (nextFireTime != null && nextFireTime.compareTo(executionDate) < 0) {
-                    executionDate = nextFireTime;
-                }
-            }
-        }
-        return executionDate;
-    }
-
+    
     public static Date getLastExecutionDate(List<? extends Trigger> triggers) {
         Date executionDate = null;
         if(Objects.nonNull(triggers)) {
@@ -127,5 +131,28 @@ public class TriggerDescriptor {
             }
         }
         return executionDate;
+    }
+
+    public static List<JobDataMap> getJobDataMapList(List<? extends Trigger> triggers) {
+        return triggers.stream()
+               .map(trigger -> trigger.getJobDataMap())
+               .collect(Collectors.toList());
+    }
+
+    private Integer getInteger(Object object) {
+
+        Integer value = null;
+        try {
+            if(object instanceof Integer) {
+                value = (Integer) object;
+            }
+
+            if(object != null) {
+                value = Integer.parseInt(object.toString());
+            }
+        }
+        finally {
+            return value;
+        }
     }
 }

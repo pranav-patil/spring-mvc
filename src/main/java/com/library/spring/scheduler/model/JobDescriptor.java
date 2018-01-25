@@ -102,7 +102,7 @@ public class JobDescriptor {
         List<TriggerDescriptor> triggerDescriptors = new ArrayList<>();
 
         for (Trigger trigger : triggersOfJob) {
-            triggerDescriptors.add(TriggerDescriptor.buildDescriptor(trigger));
+            triggerDescriptors.add(new TriggerDescriptor(trigger));
         }
 
         JobDescriptor jobDescriptor = new JobDescriptor();

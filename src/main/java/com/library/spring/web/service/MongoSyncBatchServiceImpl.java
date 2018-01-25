@@ -6,14 +6,12 @@ import com.library.spring.scheduler.model.MongoSyncJobData;
 import com.library.spring.scheduler.model.TriggerDescriptor;
 import com.library.spring.scheduler.service.JobService;
 import com.library.spring.web.model.BatchTask;
+import org.quartz.JobDataMap;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,14 +38,19 @@ public class MongoSyncBatchServiceImpl implements MongoSyncBatchService {
 				batchTask.setService(jobData.getService());
 
 				List<? extends Trigger> triggers = jobService.getTriggers(MONGO_SYNC_JOB_GROUP, job.getName());
+
 				Date lastExecutionDate = TriggerDescriptor.getLastExecutionDate(triggers);
 				batchTask.setLastExecutionDate(lastExecutionDate);
 
-				Date futureExecutionDate = TriggerDescriptor.getFutureExecutionDate(triggers);
-				LocalDateTime lastExecutionDateTime = LocalDateTime.ofInstant(lastExecutionDate.toInstant(), ZoneId.systemDefault());
-				LocalDateTime futureExecutionDateTime = LocalDateTime.ofInstant(futureExecutionDate.toInstant(), ZoneId.systemDefault());
-				long minutes = Duration.between(lastExecutionDateTime,futureExecutionDateTime).toMinutes();
-				batchTask.setRefreshDuration((int) minutes);
+				List<JobDataMap> jobDataMapList = TriggerDescriptor.getJobDataMapList(triggers);
+
+				if(!jobDataMapList.isEmpty()) {
+					JobDataMap jobDataMap = jobDataMapList.get(0);
+
+					if(jobDataMap.containsKey("minuteInterval")) {
+						batchTask.setRefreshDuration((Integer) jobDataMap.get("minuteInterval"));
+					}
+				}
 
 				batchTasks.add(batchTask);
 			}
@@ -85,16 +88,7 @@ public class MongoSyncBatchServiceImpl implements MongoSyncBatchService {
 		TriggerDescriptor triggerDescriptor = new TriggerDescriptor();
 		triggerDescriptor.setName(String.format("%s_TGR", batchTask.getId()));
 		triggerDescriptor.setGroup(MONGO_SYNC_JOB_GROUP);
-
-		Integer refreshDuration = batchTask.getRefreshDuration();
-		if(refreshDuration < 60) {
-			triggerDescriptor.setCron(String.format("* */%d * ? * *", refreshDuration));
-		}else if(refreshDuration < 1440) {
-			triggerDescriptor.setCron(String.format("* 0/%d 0/%d ? * * *", (refreshDuration / 60), (refreshDuration % 60)));
-		} else {
-			throw new RuntimeException(String.format("Refresh Duration %s minutes exceeds 24 hours which is currently not supported.", refreshDuration));
-		}
-
+		triggerDescriptor.setMinuteInterval(batchTask.getRefreshDuration());
 		triggerDescriptors.add(triggerDescriptor);
 		jobDescriptor.setTriggerDescriptors(triggerDescriptors);
 		return jobDescriptor;
