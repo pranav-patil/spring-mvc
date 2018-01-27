@@ -47,7 +47,7 @@ public class AccountService implements UserDetailsService {
             account.setPassword(passwordEncoder.encode(account.getPassword()));
             return accountRepository.save( account );
         } else {
-            throw new AccountException(String.format("Username[%s] already taken.", account.getUsername()));
+            throw new AccountException(String.format("Username [%s] already taken.", account.getUsername()));
         }
     }
 

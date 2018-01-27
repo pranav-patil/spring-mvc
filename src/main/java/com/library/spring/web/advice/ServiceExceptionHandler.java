@@ -14,7 +14,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.UUID;
 
 @Slf4j
-@ControllerAdvice(basePackages = {"com.library.spring.web.controller"})
+@ControllerAdvice(basePackages = {"com.library.spring.web.controller", "com.library.spring.security.controller"})
 public class ServiceExceptionHandler {
 
     @ExceptionHandler({Exception.class})

@@ -64,7 +64,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 				.antMatchers("/api/**").hasRole("USER")
-				.antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
 				.antMatchers("/secure/view/**").hasRole("USER")
 				.and()
 				.exceptionHandling()
@@ -72,7 +71,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 				.authenticationEntryPoint(authenticationEntryPoint())
 				.and()
 				.addFilterBefore(new OAuth2AuthenticationFilter(), SecurityContextPersistenceFilter.class);
-		;
 	}
 
 	private AccessDeniedHandler accessDeniedHandler() {

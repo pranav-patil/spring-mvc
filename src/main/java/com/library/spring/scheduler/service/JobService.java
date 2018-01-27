@@ -69,7 +69,6 @@ public class JobService {
         if(Objects.nonNull(oldJobDetail)) {
             JobDetail newJobDetail = descriptor.updateJobDetail(oldJobDetail);
             scheduler.addJob(newJobDetail, true);
-            return;
         }
     }
 

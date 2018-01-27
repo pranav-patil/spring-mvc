@@ -25,10 +25,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @see <a href="https://docs.spring.io/spring-security/site/docs/3.0.x/reference/el-access.html">Expression-Based Access Control</a>
+ */
 @RestController
 @RequestMapping("/user")
 @PreAuthorize("isAuthenticated()")
-public class ApiController {
+public class UserController {
 
     @Autowired
     private AccountService accountService;
@@ -60,7 +63,7 @@ public class ApiController {
         return new ResponseEntity<>(userAccountMapper.mapToUserBean(account), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @DeleteMapping(path = "/remove", produces = "application/json")
     @ApiOperation(value = "Remove User", notes = "Removes or deletes a registered user.", response = String.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})
@@ -74,6 +77,7 @@ public class ApiController {
      * @param clientId
      * @return
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/tokens/{clientId}")
     @ApiOperation(value = "Get Tokens", notes = "Retrieves all the tokens for specified client id.", response = String.class, responseContainer = "List")
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})
@@ -92,6 +96,7 @@ public class ApiController {
     /**
      * @see <a href="http://www.baeldung.com/spring-security-oauth-revoke-tokens">Spring Security OAuth2 – Simple Token Revocation</a>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(path = "/tokens/revoke/{tokenId:.*}")
     @ApiOperation(value = "Revoke Token", notes = "Revokes a token by token id.", response = String.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Bearer access_token", required = true, dataType = "string", paramType = "header")})

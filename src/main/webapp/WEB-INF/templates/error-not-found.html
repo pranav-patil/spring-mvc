@@ -1,0 +1,25 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(~{::title},~{},~{::link},~{})">
+	<title>404 Error</title>
+	<link rel="stylesheet" type="text/css" media="all" href="../../css/error-404.css" th:href="@{/css/error-404.css}"/>
+</head>
+
+ <body>
+    <div th:replace="fragments/banner :: banner"></div>
+    <div class="container">
+	
+	<div class="wrap">
+		<div class="error-404">
+		    <img src="../../images/error_404.png" alt="404" title="404 Error" th:src="@{/images/error_404.png}" />
+			<p><a href="#">Go back to Home</a></p>
+		</div>
+	</div>
+	
+    </div>
+    <br/><br/><br/>
+	<div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>

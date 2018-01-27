@@ -10,24 +10,31 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.Ordered;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+
+import java.util.Properties;
 
 /**
  * @see <a href="http://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html">Tutorial: Using Thymeleaf</a>
  */
 @EnableWebMvc
 @Configuration
-@Import({SwaggerConfig.class, DatabaseConfig.class, SchedulerConfig.class})
+@Import({SwaggerConfig.class, DatabaseConfig.class, SchedulerConfig.class, MongoConfig.class})
 @PropertySource("classpath:config/application.properties")
 @ComponentScan({ "com.library.spring.web", "com.library.spring.security" })
 public class SpringWebConfig implements WebMvcConfigurer {
@@ -110,5 +117,19 @@ public class SpringWebConfig implements WebMvcConfigurer {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public HandlerExceptionResolver customExceptionResolver () {
+		SimpleMappingExceptionResolver resolver = new SimpleMappingExceptionResolver();
+		Properties properties = new Properties();
+		//mapping spring internal error NoHandlerFoundException to a view name.
+		properties.setProperty(NoHandlerFoundException.class.getName(), "error-not-found");
+		resolver.setExceptionMappings(properties);
+		resolver.addStatusCode("error-not-found", HttpStatus.NOT_FOUND.value());
+
+		//Process customExceptionResolver before the default ones
+		resolver.setOrder(Ordered.HIGHEST_PRECEDENCE);
+		return resolver;
 	}
  }

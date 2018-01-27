@@ -27,7 +27,7 @@ public class BatchController {
     }
 
     @PostMapping("/job/operation")
-    @ApiOperation(value = "BatchJob Operation", notes = "Retrieve weather for city by name.", response = BatchTask.class)
+    @ApiOperation(value = "BatchJob Operation", notes = "Perform Add, Update or Delete operations for batch job.", response = BatchTask.class)
     public BatchTask jobOperation(@ApiParam(required = true, name = "BatchJobAction object",
                                          value = "Attributes and action to perform on batch job") BatchTask batchTask) throws Exception {
 

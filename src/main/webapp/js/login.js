@@ -26,7 +26,13 @@
 	            },
 	            error: function(jqXHR, textStatus, errorThrown) {
 	                var responseText = jQuery.parseJSON(jqXHR.responseText);
-	                alert(responseText.message);
+
+	                if(responseText.message != null) {
+	                    alert(responseText.message);
+	                } else if(responseText.error_description != null) {
+	                    alert(responseText.error_description);
+	                }
+
 	                console.log(responseText);
 	            }
 	        });
